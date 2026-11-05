@@ -1,11 +1,10 @@
-
 services:
   db:
     image: postgres:16-alpine
     restart: unless-stopped
     environment:
       POSTGRES_USER: logai_user
-      POSTGRES_PASSWORD: LogAI_Db_2026_StrongPass_ChangeMe
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DB: logai_db
     volumes:
       - postgres_data:/var/lib/postgresql/data
@@ -21,7 +20,7 @@ services:
     env_file:
       - ./backend/.env
     environment:
-      DATABASE_URL: postgresql+psycopg2://logai_user:LogAI_Db_2026_StrongPass_ChangeMe@db:5432/logai_db
+      DATABASE_URL: postgresql+psycopg2://logai_user:${DB_PASSWORD}@db:5432/logai_db
     depends_on:
       db:
         condition: service_healthy
@@ -34,7 +33,7 @@ services:
     depends_on:
       - backend
     ports:
-      - "8081:80"
+      - "80:80"
 
 volumes:
   postgres_data:
